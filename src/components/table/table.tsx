@@ -1,5 +1,4 @@
-import { table } from "console";
-import { useCallback, useMemo, useReducer, useState } from "react";
+import { useCallback, useMemo, useReducer, useState, useEffect } from "react";
 
 type Row = {
   id: number;
@@ -11,38 +10,38 @@ type Row = {
 const initialRows: Row[] = [
   {
     id: 1,
-    name: "Name",
-    gender: "male",
-    email: "name@mail.com",
-    phone: "089123438021",
+    name: "Joe Marry Smith",
+    gender: "Male",
+    email: "joe.james@mail.com",
+    phone: "8204629302",
   },
   {
     id: 2,
-    name: "Name",
-    gender: "male",
-    email: "name@mail.com",
-    phone: "089123438021",
+    name: "Akash",
+    gender: "Male",
+    email: "akash@mail.com",
+    phone: "8912343802",
   },
   {
     id: 3,
-    name: "Name",
-    gender: "male",
-    email: "name@mail.com",
-    phone: "089123438021",
+    name: "Hailee",
+    gender: "Female",
+    email: "hail.m@mail.com",
+    phone: "4913438021",
   },
   {
     id: 4,
-    name: "Name",
-    gender: "male",
-    email: "name@mail.com",
-    phone: "089123438021",
+    name: "Shiv",
+    gender: "Male",
+    email: "shiv@mail.com",
+    phone: "8912343801",
   },
   {
     id: 5,
-    name: "Name",
+    name: "Krish",
     gender: "male",
-    email: "name@mail.com",
-    phone: "089123438021",
+    email: "krish@mail.com",
+    phone: "9989123431",
   },
 ];
 const useTableData = () => {
@@ -57,7 +56,6 @@ const useTableData = () => {
           const newState = state.map((row) =>
             row.id === action.row?.id ? action.row : row
           );
-          console.log(newState);
           return newState;
         case "delete-row":
           return state.filter((row) => row.id != action.row?.id);
@@ -76,24 +74,30 @@ const useTableData = () => {
   return { rows, deleteRow, updateRow };
 };
 
-function EditForm(props: { data: Row; setRow: (arg0: Row) => void }) {
+function EditForm(props: {
+  value: Row;
+  onSubmit: (arg0: Row) => void;
+  onCancel(): void;
+}) {
   const [form, setForm] = useReducer(
     (current: Row, latest: Partial<Row>) => ({ ...current, ...latest }),
-    props.data
+    props.value
   );
 
   const dataKeys = useMemo(() => {
-    const keys = Object.keys(props.data);
+    setForm(props.value);
+    const keys = Object.keys(props.value);
     keys.shift();
     return keys;
-  }, [props.data]);
+  }, [props.value]);
+
+  useEffect(() => {
+    console.log("render");
+  });
 
   return (
-    <div
-      className="border-b border-gray-900/10 pb-12 max-w-sm ml-1"
-      style={{ maxWidth: 440, marginLeft: "0.5rem" }}
-    >
-      <h2 className="text-base font-semibold leading-7 text-gray-900">
+    <div className="border-b border-gray-900/10 pb-12 max-w-sm ml-1 text-gray-400">
+      <h2 className="text-base font-semibold leading-7">
         Personal Information
       </h2>
       <p className="mt-1 text-sm leading-6 text-gray-600"></p>
@@ -101,7 +105,7 @@ function EditForm(props: { data: Row; setRow: (arg0: Row) => void }) {
         onSubmit={(e) => {
           e.preventDefault();
           // console.log(e.currentTarget.id);
-          props.setRow(form);
+          props.onSubmit(form);
         }}
         className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
       >
@@ -109,7 +113,7 @@ function EditForm(props: { data: Row; setRow: (arg0: Row) => void }) {
           <div key={index} className="sm:col-span-3">
             <label
               htmlFor={key}
-              className="block text-sm font-medium leading-6 text-gray-900"
+              className="block text-sm font-medium leading-6"
             >
               {key}
             </label>
@@ -125,7 +129,7 @@ function EditForm(props: { data: Row; setRow: (arg0: Row) => void }) {
                   })
                 }
                 type="text"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
               {/* </div> */}
             </div>
@@ -134,8 +138,11 @@ function EditForm(props: { data: Row; setRow: (arg0: Row) => void }) {
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button
             type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="text-sm font-semibold leading-6"
             style={{ margin: "0.5rem" }}
+            onClick={() => {
+              props.onCancel();
+            }}
           >
             Cancel
           </button>
@@ -147,7 +154,7 @@ function EditForm(props: { data: Row; setRow: (arg0: Row) => void }) {
               paddingBlock: "0.5rem",
               backgroundColor: "yellowgreen",
             }}
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold  shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Update
           </button>
@@ -156,70 +163,129 @@ function EditForm(props: { data: Row; setRow: (arg0: Row) => void }) {
     </div>
   );
 }
+
+// Actions is a component for table row and it will be having update and delete functionality
+const Actions: React.FC<{ onEdit(): void; onDelete(): void }> = ({
+  onEdit,
+  onDelete,
+}) => {
+  return (
+    <div>
+      <button
+        style={{ marginRight: 10 }}
+        className="text-gray-400 hover:text-gray-100 mr-2"
+        onClick={(e) => {
+          e.preventDefault();
+          // setEditRow(row);
+          onEdit();
+        }}
+      >
+        Edit
+      </button>
+      <button
+        className="text-gray-400 hover:text-gray-100 mr-2"
+        onClick={(e) => {
+          e.preventDefault();
+          if (confirm("Arge you sure want to delete?")) {
+            // tableData.deleteRow(row);
+            onDelete();
+          }
+        }}
+      >
+        Delete
+      </button>
+    </div>
+  );
+};
+
 function Table() {
   const tableData = useTableData();
   // console.log({ tableData });
-  const { rows } = tableData;
-  const [editRow, setEditRow] = useState<Row>();
+  const [editRow, setRowDataToUpdate] = useState<Row>();
   return (
-    <div className="mx-auto px-6">
-      {editRow && (
-        <EditForm
-          data={editRow}
-          setRow={(newRow) => {
-            tableData.updateRow(newRow);
-            setEditRow(undefined);
+    <div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        {/* Table with user's details and good UI */}
+
+        {/* edit form without animation */}
+        {/* {editRow && (
+          <EditForm
+            value={
+              editRow ?? { email: '', gender: '', id: -1, name: '', phone: '' }
+            }
+            onSubmit={(newRow) => {
+              tableData.updateRow(newRow);
+              setRowDataToUpdate(undefined);
+            }}
+            onCancel={() => {
+              setRowDataToUpdate(undefined);
+            }}
+          />
+        )} */}
+
+        {/* edit form with animation */}
+        <div
+          style={{
+            translate: editRow ? -70 : 0,
+            opacity: editRow ? 1 : 0,
+            transition: "all 0.2s ease-out 0s",
           }}
-        />
-      )}
+        >
+          <EditForm
+            value={
+              editRow === undefined
+                ? { email: "", gender: "", id: -1, name: "", phone: "" }
+                : editRow
+            }
+            onSubmit={(newRow) => {
+              tableData.updateRow(newRow);
+              setRowDataToUpdate(undefined);
+            }}
+            onCancel={() => {
+              setRowDataToUpdate(undefined);
+            }}
+          />
+        </div>
 
-      {/* Table of user's details */}
-
-      <table>
-        <caption className="font-medium">Add New Row</caption>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Gender</th>
-            <th>Phone</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id}>
-              <td>{row.id}</td>
-              <td>{row.name}</td>
-              <td>{row.email}</td>
-              <td>{row.gender}</td>
-              <td>{row.phone}</td>
-              <td>
-                <button
-                  style={{ marginRight: 10 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setEditRow(row);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (confirm("Arge you sure want to delete?")) {
-                      tableData.deleteRow(row);
-                    }
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        {/* Table with user's details and good UI */}
+        <div className="col-span-12">
+          <div className="overflow-auto lg:overflow-visible ">
+            <table className="table text-gray-400 border-separate space-y-6 text-sm">
+              <thead className="bg-gray-800 text-gray-500">
+                <tr>
+                  <th className="p-3">Name</th>
+                  <th className="p-3 text-left">Email</th>
+                  <th className="p-3 text-left">Gender</th>
+                  <th className="p-3 text-left ">Phone</th>
+                  <th className="p-3 text-left ">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.rows.map((row) => {
+                  return (
+                    <tr key={row.id} className="bg-gray-800">
+                      <td className="p-3 text-center">{row.name}</td>
+                      <td className="p-3 text-left">{row.gender}</td>
+                      <td className="p-3 text-left">{row.phone}</td>
+                      <td className="p-3 text-left">{row.email}</td>
+                      <td className="p-3 text-left">
+                        <Actions
+                          onDelete={() => {
+                            tableData.deleteRow(row);
+                          }}
+                          onEdit={() => {
+                            setRowDataToUpdate(row);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

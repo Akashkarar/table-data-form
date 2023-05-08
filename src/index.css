@@ -8,3 +8,119 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+/* for the table design */
+.bg-gray-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+}
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+.bg-gray-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+}
+
+tr td:nth-child(1),
+tr th:nth-child(1) {
+  border-radius: 0.625rem 0 0 0.625rem;
+}
+tr td:nth-child(n + 5),
+tr th:nth-child(n + 5) {
+  border-radius: 0 0.625rem 0.625rem 0;
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.p-3 {
+  padding: 0.75rem;
+}
+.p-3 {
+  padding: 0.75rem;
+}
+
+.table {
+  border-spacing: 0 15px;
+}
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.border-separate {
+  border-collapse: separate;
+}
+.table {
+  display: table;
+}
+table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+.table {
+  border-spacing: 0 15px;
+}
+@media (min-width: 1024px) {
+  .lg\:overflow-visible {
+    overflow: visible;
+  }
+}
+.overflow-auto {
+  overflow: auto;
+}
+.col-span-12 {
+  grid-column: span 12 / span 12;
+}
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+.mr-2 {
+  margin-right: 0.5rem;
+}
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+a {
+  cursor: pointer;
+}
+.hover\:text-gray-100:hover {
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity));
+}
+@media (min-width: 640px) {
+  .sm\:col-span-3 {
+    grid-column: span 3 / span 3;
+  }
+}
+.text-gray-900 {
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
+}
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+.max-w-sm {
+  max-width: 24rem /* 384px */;
+}
+.border-gray-900\/10 {
+  border-color: rgb(17 24 39 / 0.1);
+}
+.border-b {
+  border-bottom-width: 1px;
+}
