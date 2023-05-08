@@ -6,6 +6,7 @@
   background-position: 0 0, 25px 25px;
   -webkit-animation: slide 2s linear infinite;
   animation: slide 4s linear infinite;
+  color: white;
 }
 
 @keyframes slide {

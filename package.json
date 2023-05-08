@@ -12,20 +12,6 @@
   "bugs": {
     "url": "https://github.com/jvidalv/vital/issues"
   },
-  "keywords": [
-    "react",
-    "vite",
-    "typescript",
-    "jest",
-    "tailwind",
-    "template",
-    "starter",
-    "css-modules",
-    "eslint",
-    "prettier",
-    "husky",
-    "commit-lint"
-  ],
   "browserslist": [
     ">0.2%",
     "not dead",

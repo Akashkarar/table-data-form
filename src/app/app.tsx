@@ -18,6 +18,7 @@ import Button from "components/atoms/button";
 import CopyButton from "components/molecules/copy-button";
 
 import styles from "./app.module.css";
+import Table from "components/table/table";
 
 const features = [
   {
@@ -100,7 +101,7 @@ const features = [
   },
 ];
 
-const App = (): JSX.Element => {
+const OldApp = (): JSX.Element => {
   return (
     <main className={styles.main}>
       <header className={styles.header}>
@@ -159,4 +160,13 @@ const App = (): JSX.Element => {
   );
 };
 
+const App = (): JSX.Element => {
+  return (
+    <main>
+      {/* adding new item (row) in the table */}
+      {/* edit existing item (row) in the table */}
+      <Table />
+    </main>
+  );
+};
 export default App;
