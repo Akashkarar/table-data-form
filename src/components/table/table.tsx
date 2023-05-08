@@ -39,8 +39,15 @@ const initialRows: Row[] = [
   {
     id: 5,
     name: "Krish",
-    gender: "male",
+    gender: "Male",
     email: "krish@mail.com",
+    phone: "9989123431",
+  },
+  {
+    id: 6,
+    name: "Ganga",
+    gender: "Female",
+    email: "ganga@mail.com",
     phone: "9989123431",
   },
 ];
@@ -198,10 +205,108 @@ const Actions: React.FC<{ onEdit(): void; onDelete(): void }> = ({
   );
 };
 
+const PageItem: React.FC<{
+  first?: boolean;
+  last?: boolean;
+  current?: boolean;
+  children: React.ReactNode;
+  onClick(): void;
+}> = ({ first, last, current, children, onClick }) => {
+  if (current) {
+    return (
+      <li>
+        <a
+          className="bg-blue-50 border border-gray-300 text-blue-600 hover:bg-blue-100 hover:text-blue-700  py-2 px-3 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+          onClick={(e) => {
+            e.preventDefault();
+            onClick();
+          }}
+        >
+          {children}
+        </a>
+      </li>
+    );
+  }
+  return (
+    <li>
+      <a
+        className={`bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ml-0${
+          first ? " rounded-l-lg" : last ? " rounded-r-lg" : ""
+        } leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+        onClick={(e) => {
+          e.preventDefault();
+          onClick();
+        }}
+      >
+        {children}
+      </a>
+    </li>
+  );
+};
+const Pagination: React.FC<{
+  value: number;
+  total: number;
+  onClickValue(value: number): void;
+  onPrevious(): void;
+  onNext(): void;
+}> = ({ onClickValue, onNext, onPrevious, total, value }) => {
+  const pages = useMemo(() => {
+    const element: JSX.Element[] = [];
+    for (let i = 1; i <= total; i++)
+      element.push(
+        <PageItem
+          key={i}
+          current={i === value}
+          onClick={() => {
+            onClickValue(i);
+          }}
+        >
+          {i}
+        </PageItem>
+      );
+    return element;
+  }, [onClickValue, total, value]);
+  return (
+    <nav aria-label="Page navigation" className="h-10">
+      <ul className="inline-flex -space-x-px">
+        <PageItem first onClick={onPrevious}>
+          Previous
+        </PageItem>
+        {pages}
+        <PageItem last onClick={onNext}>
+          Next
+        </PageItem>
+      </ul>
+    </nav>
+  );
+};
+
 function Table() {
   const tableData = useTableData();
   // console.log({ tableData });
   const [editRow, setRowDataToUpdate] = useState<Row>();
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const itemsPerPage = 5;
+  const visibleRows = useMemo(() => {
+    const rows: Row[] = [];
+    const end = itemsPerPage * currentPage;
+    const start = end - itemsPerPage;
+    for (let i = start; i < end; i++) {
+      if (i >= tableData.rows.length) {
+        break;
+      }
+      rows.push(tableData.rows[i]);
+    }
+    return rows;
+  }, [currentPage, tableData.rows]);
+
+  const totalPage = useMemo(
+    () => Math.ceil(tableData.rows.length / itemsPerPage),
+    [tableData.rows.length]
+  );
+
   return (
     <div>
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -249,7 +354,16 @@ function Table() {
 
         {/* Table with user's details and good UI */}
         <div className="col-span-12">
-          <div className="overflow-auto lg:overflow-visible ">
+          <div
+            className="overflow-auto lg:overflow-visible"
+            style={{
+              height: "calc(65px * 7)",
+              width: "calc(90px * 7)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
             <table className="table text-gray-400 border-separate space-y-6 text-sm">
               <thead className="bg-gray-800 text-gray-500">
                 <tr>
@@ -261,7 +375,7 @@ function Table() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.rows.map((row) => {
+                {visibleRows.map((row) => {
                   return (
                     <tr key={row.id} className="bg-gray-800">
                       <td className="p-3 text-center">{row.name}</td>
@@ -283,6 +397,20 @@ function Table() {
                 })}
               </tbody>
             </table>
+            <Pagination
+              value={currentPage}
+              total={totalPage}
+              onClickValue={(value) => {
+                console.log(value);
+                setCurrentPage(value);
+              }}
+              onPrevious={() => {
+                setCurrentPage((c) => (c - 1 > 0 ? c - 1 : c));
+              }}
+              onNext={() => {
+                setCurrentPage((c) => (c + 1 <= totalPage ? c + 1 : c));
+              }}
+            />
           </div>
         </div>
       </div>
